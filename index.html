@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Viewport meta tag for responsive design -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Mock Test: Motion</title>
+    <!-- Load Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font for clean typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Apply Inter font to the whole page */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; /* gray-100 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8; /* gray-400 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b; /* gray-500 */
+        }
+        /* Style for the custom radio button label when checked */
+        input[type="radio"]:checked + label {
+            background-color: #e0f2fe; /* sky-100 */
+            border-color: #0ea5e9; /* sky-500 */
+            font-weight: 600;
+            color: #0369a1; /* sky-700 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <!-- Main Application Container -->
+    <div id="app" class="bg-white p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-3xl mx-auto">
+
+        <!-- Screen 1: Start Screen (Default Visible) -->
+        <div id="start-screen" class="text-center">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">Physics Mock Test</h1>
+            <p class="text-lg text-gray-600 mb-6">Chapters: Motion, WEP, Gravitation & Rotation</p>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left">
+                <h2 class="text-xl font-semibold text-blue-800 mb-2">Test Instructions</h2>
+                <ul class="list-disc list-inside text-gray-700 space-y-1">
+                    <li>Total Questions: <strong>50</strong></li>
+                    <li>Time Limit: <strong>60 Minutes</strong></li>
+                    <li>Correct Answer: <strong>+1 Mark</strong></li>
+                    <li>Incorrect Answer: <strong>-0.25 Marks</strong></li>
+                    <li>Unanswered: <strong>0 Marks</strong></li>
+                    <li>Click "Submit Test" when you are finished.</li>
+                </ul>
+            </div>
+            <button id="start-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 text-lg shadow-md">
+                Start Test
+            </button>
+        </div>
+
+        <!-- Screen 2: Test Screen (Hidden) -->
+        <div id="test-screen" class="hidden">
+            <!-- Sticky Header with Timer -->
+            <div class="flex justify-between items-center mb-6 sticky top-0 bg-white pt-2 pb-4 border-b">
+                <h1 class="text-2xl font-bold text-gray-800">Physics Test</h1>
+                <div id="timer" class="font-mono text-2xl font-bold bg-gray-100 text-gray-800 py-2 px-4 rounded-lg shadow-inner">
+                    60:00
+                </div>
+            </div>
+
+            <!-- Scrollable Questions Container -->
+            <div id="questions-container" class="space-y-8 max-h-[65vh] overflow-y-auto pr-2">
+                <!-- Questions will be dynamically inserted here by JavaScript -->
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mt-8">
+                <button id="submit-btn" class="w-full bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition-all duration-300 text-lg shadow-md">
+                    Submit Test
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 3: Results Screen (Hidden) -->
+        <div id="results-screen" class="hidden">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4 text-center">Test Results</h1>
+            
+            <!-- Score Summary Box -->
+            <div id="score-summary" class="bg-gray-50 rounded-lg p-6 mb-6 text-center shadow-md">
+                <!-- Score summary will be dynamically inserted here -->
+            </div>
+
+            <!-- Detailed Results Review -->
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Detailed Breakdown</h2>
+            <div id="results-details" class="space-y-4 max-h-[50vh] overflow-y-auto pr-2">
+                <!-- Detailed results will be dynamically inserted here -->
+            </div>
+            
+            <!-- Restart Button -->
+            <div class="mt-8">
+                <button id="restart-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 text-lg shadow-md">
+                    Take Test Again
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- 1. DATA: All 50 Questions ---
+        const questions = [
+            {
+                q: "1. The area under a velocity-time graph represents:",
+                options: [
+                    "a) Acceleration",
+                    "b) Displacement",
+                    "c) Average velocity",
+                    "d) Impulse"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "2. A body starts from rest and accelerates uniformly at 2 m/s². Its velocity after 5 seconds is:",
+                options: [
+                    "a) 5 m/s",
+                    "b) 10 m/s",
+                    "c) 2.5 m/s",
+                    "d) 20 m/s"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "3. A ball is dropped from the top of a tower. It reaches the ground in 4 seconds. The height of the tower is (Take g = 10 m/s²):",
+                options: [
+                    "a) 40 m",
+                    "b) 20 m",
+                    "c) 80 m",
+                    "d) 160 m"
+                ],
+                answer: 2 // c
+            },
+            {
+                q: "4. For a projectile fired at an angle θ with the horizontal, its velocity at the maximum height is:",
+                options: [
+                    "a) 0",
+                    "b) u cosθ",
+                    "c) u sinθ",
+                    "d) u"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "5. A body's displacement is given by x = 3t² + 2t + 1. The instantaneous velocity at t = 2 s is:",
+                options: [
+                    "a) 12 m/s",
+                    "b) 14 m/s",
+                    "c) 10 m/s",
+                    "d) 17 m/s"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "6. Newton's first law of motion is also known as the law of:",
+                options: [
+                    "a) Momentum",
+                    "b) Action-Reaction",
+                    "c) Inertia",
+                    "d) Gravitation"
+                ],
+                answer: 2 // c
+            },
+            {
+                q: "7. A force of 10 N acts on a body of mass 2 kg. The acceleration produced is:",
+                options: [
+                    "a) 5 m/s²",
+                    "b) 0.2 m/s²",
+                    "c) 20 m/s²",
+                    "d) 12 m/s²"
+                ],
+                answer: 0 // a
+            },
+            {
+                q: "8. Impulse has the same unit as:",
+                options: [
+                    "a) Force",
+                    "b) Work",
+                    "c) Power",
+                    "d) Momentum"
+                ],
+                answer: 3 // d
+            },
+            {
+                q: "9. A body of mass 5 kg moving at 10 m/s collides with a wall and stops. The impulse applied by the wall is:",
+                options: [
+                    "a) -50 Ns",
+                    "b) 50 Ns",
+                    "c) 5 Ns",
+                    "d) -5 Ns"
+                ],
+                answer: 0 // a
+            },
+            {
+                q: "10. The maximum range of a projectile is achieved when it is fired at an angle of:",
+                options: [
+                    "a) 30°",
+                    "b) 90°",
+                    "c) 60°",
+                    "d) 45°"
+                ],
+                answer: 3 // d
+            },
+            {
+                q: "11. A man is in a lift accelerating upwards. His apparent weight will:",
+                options: [
+                    "a) Increase",
+                    "b) Decrease",
+                    "c) Remain the same",
+                    "d) Become zero"
+                ],
+                answer: 0 // a
+            },
+            {
+                q: "12. The force required to keep a body moving in a uniform circle is:",
+                options: [
+                    "a) Centrifugal force",
+                    "b) Centripetal force",
+                    "c) Tangential force",
+                    "d) Frictional force"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "13. A car of mass 1000 kg moves in a circle of radius 50 m with a speed of 10 m/s. The centripetal force is:",
+                options: [
+                    "a) 200 N",
+                    "b) 2000 N",
+                    "c) 500 N",
+                    "d) 5000 N"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "14. When a body moves with constant angular velocity, which statement is true?",
+                options: [
+                    "a) Its linear velocity is constant.",
+                    "b) It has zero acceleration.",
+                    "c) It has only centripetal acceleration.",
+                    "d) It has both centripetal and tangential acceleration."
+                ],
+                answer: 2 // c
+            },
+            {
+                q: "15. Work done by a centripetal force is always:",
+                options: [
+                    "a) Positive",
+                    "b) Negative",
+                    "c) Zero",
+                    "d) Maximum"
+                ],
+                answer: 2 // c
+            },
+            {
+                q: "16. The work-energy theorem states that the net work done on a body is equal to the change in its:",
+                options: [
+                    "a) Potential Energy",
+                    "b) Kinetic Energy",
+                    "c) Momentum",
+                    "d) Internal Energy"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "17. A 1 kg mass has a kinetic energy of 2 J. Its speed is:",
+                options: [
+                    "a) 2 m/s",
+                    "b) 1 m/s",
+                    "c) 4 m/s",
+                    "d) 0.5 m/s"
+                ],
+                answer: 0 // a
+            },
+            {
+                q: "18. A force F = (2i + 3j) N displaces a body by d = (4i) m. The work done is:",
+                options: [
+                    "a) 8 J",
+                    "b) 12 J",
+                    "c) 20 J",
+                    "d) 0 J"
+                ],
+                answer: 0 // a
+            },
+            {
+                q: "19. Power is defined as:",
+                options: [
+                    "a) Force × Velocity",
+                    "b) Force × Displacement",
+                    "c) Mass × Acceleration",
+                    "d) Work × Time"
+                ],
+                answer: 0 // a
+            },
+            {
+                q: "20. In an elastic collision, which of the following is conserved?",
+                options: [
+                    "a) Only momentum",
+                    "b) Only kinetic energy",
+                    "c) Both momentum and kinetic energy",
+                    "d) Neither momentum nor kinetic energy"
+                ],
+                answer: 2 // c
+            },
+            {
+                q: "21. A body of mass 'm' is dropped from a height 'h'. Its potential energy at the top is 'U'. Its kinetic energy just before hitting the ground is:",
+                options: [
+                    "a) U",
+                    "b) U/2",
+                    "c) 2U",
+                    "d) 0"
+                ],
+                answer: 0 // a
+            },
+            {
+                q: "22. The coefficient of static friction is:",
+                options: [
+                    "a) Always greater than the coefficient of kinetic friction",
+                    "b) Always less than the coefficient of kinetic friction",
+                    "c) Always equal to the coefficient of kinetic friction",
+                    "d) Sometimes less and sometimes greater"
+                ],
+                answer: 0 // a
+            },
+            {
+                q: "23. A boat crosses a river in the shortest time. In which direction should it row?",
+                options: [
+                    "a) Along the stream",
+                    "b) Against the stream",
+                    "c) Perpendicular to the stream",
+                    "d) At an angle of 45° upstream"
+                ],
+                answer: 2 // c
+            },
+            {
+                q: "24. If torque on a rotating body is zero, then what is conserved?",
+                options: [
+                    "a) Linear momentum",
+                    "b) Force",
+                    "c) Angular momentum",
+                    "d) Angular velocity"
+                ],
+                answer: 2 // c
+            },
+            {
+                q: "25. The moment of inertia of a solid sphere about its diameter is:",
+                options: [
+                    "a) (2/5)MR²",
+                    "b) (1/2)MR²",
+                    "c) (2/3)MR²",
+                    "d) MR²"
+                ],
+                answer: 0 // a
+            },
+            {
+                q: "26. A flywheel spinning at 300 rpm (revolutions per minute) has an angular velocity of:",
+                options: [
+                    "a) 300π rad/s",
+                    "b) 10π rad/s",
+                    "c) 5π rad/s",
+                    "d) 600π rad/s"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "27. The relation between torque (τ), moment of inertia (I), and angular acceleration (α) is:",
+                options: [
+                    "a) τ = I / α",
+                    "b) α = τ / I",
+                    "c) I = τ / α",
+                    "d) τ = Iα²"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "28. The kinetic energy of rotation is given by:",
+                options: [
+                    "a) (1/2)mv²",
+                    "b) mgh",
+                    "c) (1/2)Iω²",
+                    "d) Iω"
+                ],
+                answer: 2 // c
+            },
+            {
+                q: "29. A body covering equal distances in equal intervals of time is said to have:",
+                options: [
+                    "a) Uniform acceleration",
+                    "b) Uniform velocity",
+                    "c) Uniform speed",
+                    "d) Non-uniform speed"
+                ],
+                answer: 2 // c
+            },
+            {
+                q: "30. A car travels 30 km at a uniform speed of 60 km/h and the next 30 km at a uniform speed of 40 km/h. Its average speed is:",
+                options: [
+                    "a) 50 km/h",
+                    "b) 48 km/h",
+                    "c) 55 km/h",
+                    "d) 100 km/h"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "31. A vector quantity has:",
+                options: [
+                    "a) Only magnitude",
+                    "b) Only direction",
+                    "c) Both magnitude and direction",
+                    "d) Neither magnitude nor direction"
+                ],
+                answer: 2 // c
+            },
+            {
+                q: "32. Which of the following is a scalar quantity?",
+                options: [
+                    "a) Velocity",
+                    "b) Force",
+                    "c) Work",
+                    "d) Momentum"
+                ],
+                answer: 2 // c
+            },
+            {
+                q: "33. When a bullet is fired from a gun, the gun recoils. This is an application of:",
+                options: [
+                    "a) Newton's First Law",
+                    "b) Newton's Second Law",
+                    "c) Newton's Third Law",
+                    "d) Conservation of Energy"
+                ],
+                answer: 2 // c
+            },
+            {
+                q: "34. A body of mass 10 kg is at rest on a horizontal floor. The coefficient of static friction is 0.5. The minimum force required to move the body is (Take g = 10 m/s²):",
+                options: [
+                    "a) 10 N",
+                    "b) 5 N",
+                    "c) 100 N",
+                    "d) 50 N"
+                ],
+                answer: 3 // d
+            },
+            {
+                q: "35. The angle of banking (θ) for a road of radius 'r' and a vehicle speed 'v' is given by:",
+                options: [
+                    "a) tanθ = v²rg",
+                    "b) tanθ = v² / rg",
+                    "c) tanθ = rg / v²",
+                    "d) sinθ = v² / rg"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "36. In a non-uniform circular motion, the acceleration of the particle is:",
+                options: [
+                    "a) Only tangential",
+                    "b) Only centripetal",
+                    "c) The vector sum of tangential and centripetal accelerations",
+                    "d) Zero"
+                ],
+                answer: 2 // c
+            },
+            {
+                q: "37. The slope of a position-time (x-t) graph gives:",
+                options: [
+                    "a) Acceleration",
+                    "b) Velocity",
+                    "c) Displacement",
+                    "d) Time"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "38. A 1 Horsepower (HP) is approximately equal to:",
+                options: [
+                    "a) 1000 W",
+                    "b) 746 W",
+                    "c) 500 W",
+                    "d) 100 W"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "39. A light body and a heavy body have the same kinetic energy. Which one has greater momentum?",
+                options: [
+                    "a) The light body",
+                    "b) The heavy body",
+                    "c) Both have equal momentum",
+                    "d) Cannot be determined"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "40. A solid cylinder is rolling without slipping. The ratio of its translational kinetic energy to its total kinetic energy is:",
+                options: [
+                    "a) 1:2",
+                    "b) 2:3",
+                    "c) 1:3",
+                    "d) 3:4"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "41. The time of flight of a projectile is given by:",
+                options: [
+                    "a) (2u sinθ) / g",
+                    "b) (u sinθ) / g",
+                    "c) (u² sin²θ) / 2g",
+                    "d) (u² sin 2θ) / g"
+                ],
+                answer: 0 // a
+            },
+            {
+                q: "42. A particle's velocity changes from (2i + 3j) m/s to (4i + 1j) m/s in 2 seconds. The acceleration is:",
+                options: [
+                    "a) (i - j) m/s²",
+                    "b) (2i - 2j) m/s²",
+                    "c) (i + j) m/s²",
+                    "d) (3i + 2j) m/s²"
+                ],
+                answer: 0 // a
+            },
+            {
+                q: "43. A train moving at 20 m/s sounds a horn. A person on the platform observes the train. This phenomenon is related to:",
+                options: [
+                    "a) Doppler Effect",
+                    "b) Newton's Laws",
+                    "c) Photoelectric Effect",
+                    "d) Interference"
+                ],
+                answer: 0 // a
+            },
+            {
+                q: "44. The angular momentum (L) is given by the cross product:",
+                options: [
+                    "a) L = I × ω",
+                    "b) L = r × p",
+                    "c) L = p × r",
+                    "d) L = F × r"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "45. The unit of angular velocity in the SI system is:",
+                options: [
+                    "a) rev/s",
+                    "b) deg/s",
+                    "c) m/s",
+                    "d) rad/s"
+                ],
+                answer: 3 // d
+            },
+            {
+                q: "46. When a person walks, the force that propels them forward is:",
+                options: [
+                    "a) The force exerted by the person on the ground.",
+                    "b) The frictional force exerted by the ground on the person.",
+                    "c) The muscular force of the person.",
+                    "d) Air resistance."
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "47. A 60 kg man runs up a staircase in 10 seconds. The staircase has 20 steps, each 0.2 m high. The power developed by the man is (Take g = 10 m/s²):",
+                options: [
+                    "a) 120 W",
+                    "b) 240 W",
+                    "c) 600 W",
+                    "d) 1200 W"
+                ],
+                answer: 1 // b
+            },
+            {
+                q: "48. For a body in free fall, which of the following remains constant?",
+                options: [
+                    "a) Velocity",
+                    "b) Potential energy",
+                    "c) Kinetic energy",
+                    "d) Total mechanical energy (if air resistance is ignored)"
+                ],
+                answer: 3 // d
+            },
+            {
+                q: "49. Two projectiles are fired at angles 30° and 60° with the same initial speed. The ratio of their horizontal ranges is:",
+                options: [
+                    "a) 1:1",
+                    "b) 1:2",
+                    "c) 1:√3",
+                    "d) √3:1"
+                ],
+                answer: 0 // a
+            },
+            {
+                q: "50. The radius of gyration (K) of a body with mass M and moment of inertia I is:",
+                options: [
+                    "a) K = I / M",
+                    "b) K = √(I / M)",
+                    "c) K = √(M / I)",
+                    "d) K = (I / M)²"
+                ],
+                answer: 1 // b
+            }
+        ];
+
+        // --- 2. DOM Elements ---
+        const startScreen = document.getElementById('start-screen');
+        const testScreen = document.getElementById('test-screen');
+        const resultsScreen = document.getElementById('results-screen');
+
+        const startBtn = document.getElementById('start-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const restartBtn = document.getElementById('restart-btn');
+
+        const timerEl = document.getElementById('timer');
+        const questionsContainer = document.getElementById('questions-container');
+        const scoreSummaryEl = document.getElementById('score-summary');
+        const resultsDetailsEl = document.getElementById('results-details');
+
+        // --- 3. State Variables ---
+        let timerSeconds = 3600; // 60 minutes * 60 seconds
+        let timerInterval = null;
+        let userAnswers = {}; // Stores { questionIndex: optionIndex }
+
+        // --- 4. Functions ---
+
+        /**
+         * Starts the test: Hides start, shows test, renders questions, starts timer.
+         */
+        function startTest() {
+            startScreen.style.display = 'none';
+            resultsScreen.style.display = 'none';
+            testScreen.style.display = 'block';
+            
+            // Reset state for a new test
+            userAnswers = {};
+            timerSeconds = 3600; 
+            timerEl.textContent = "60:00";
+            timerEl.classList.remove('text-red-600', 'animate-pulse');
+
+            renderQuestions();
+            startTimer();
+        }
+
+        /**
+         * Renders all questions and options into the questions container.
+         */
+        function renderQuestions() {
+            questionsContainer.innerHTML = ''; // Clear old questions
+            questions.forEach((q, index) => {
+                const questionBlock = document.createElement('div');
+                questionBlock.className = 'question-block mb-8 p-4 bg-gray-50 rounded-lg shadow-sm';
+
+                // Question Text
+                const questionText = document.createElement('p');
+                questionText.className = 'question-text text-lg font-semibold text-gray-800 mb-4';
+                questionText.textContent = q.q;
+                questionBlock.appendChild(questionText);
+
+                // Options Group
+                const optionsGroup = document.createElement('div');
+                optionsGroup.className = 'options-group space-y-3';
+
+                q.options.forEach((option, optionIndex) => {
+                    const radioId = `q${index}_option${optionIndex}`;
+                    
+                    // The hidden actual radio button
+                    const radioInput = document.createElement('input');
+                    radioInput.type = 'radio';
+                    radioInput.id = radioId;
+                    radioInput.name = `q${index}`; // Group options by question
+                    radioInput.value = optionIndex;
+                    radioInput.className = 'hidden'; // Hide the default radio button
+                    
+                    // Store the user's answer when changed
+                    radioInput.onchange = () => {
+                        userAnswers[index] = optionIndex;
+                    };
+
+                    // The clickable, styled label
+                    const radioLabel = document.createElement('label');
+                    radioLabel.htmlFor = radioId;
+                    // Use innerHTML to correctly render special characters if any
+                    radioLabel.innerHTML = option.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    radioLabel.className = 'option-label block p-3 rounded-lg border-2 border-gray-200 hover:bg-gray-100 cursor-pointer transition-all duration-200';
+                    
+                    optionsGroup.appendChild(radioInput);
+                    optionsGroup.appendChild(radioLabel);
+                });
+
+                questionBlock.appendChild(optionsGroup);
+                questionsContainer.appendChild(questionBlock);
+            });
+        }
+
+        /**
+         * Starts the countdown timer.
+         */
+        function startTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval); // Clear any old timer
+            }
+
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                timerEl.textContent = formatTimerDisplay(timerSeconds);
+
+                // Add warning class when 5 minutes are left
+                if (timerSeconds <= 300 && !timerEl.classList.contains('text-red-600')) { 
+                    timerEl.classList.add('text-red-600');
+                    timerEl.classList.add('animate-pulse');
+                }
+
+                // Auto-submit when time runs out
+                if (timerSeconds <= 0) {
+                    submitTest();
+                }
+            }, 1000); // Update every second
+        }
+
+        /**
+         * Formats total seconds into MM:SS string.
+         */
+        function formatTimerDisplay(totalSeconds) {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        /**
+         * Formats total seconds into a readable string (e.g., "58m 12s").
+         */
+        function formatTimeTaken(totalSeconds) {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            
+            let parts = [];
+            if (minutes > 0) parts.push(`${minutes}m`);
+            parts.push(`${seconds}s`);
+            
+            return parts.join(' ');
+        }
+
+        /**
+         * Submits the test: stops timer, calculates score, shows results.
+         */
+        function submitTest() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+
+            testScreen.style.display = 'none';
+            resultsScreen.style.display = 'block';
+
+            let score = 0;
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let unansweredCount = 0;
+            let resultsHTML = '';
+            const timeTaken = 3600 - timerSeconds;
+
+            questions.forEach((q, index) => {
+                const userAnswerIndex = userAnswers[index];
+                const correctAnswerIndex = q.answer;
+                const isCorrect = userAnswerIndex === correctAnswerIndex;
+
+                let statusClass = '';
+                let statusText = '';
+                let answerDetails = '';
+
+                if (userAnswerIndex === undefined) {
+                    // Unanswered
+                    unansweredCount++;
+                    statusClass = 'bg-yellow-100 border-yellow-300';
+                    statusText = '<span class="font-bold text-yellow-700">Not Answered (0)</span>';
+                    answerDetails = `<p class="text-gray-700 mt-1">Correct answer: <strong class="text-green-700">${q.options[correctAnswerIndex]}</strong></p>`;
+                } else if (isCorrect) {
+                    // Correct
+                    score += 1;
+                    correctCount++;
+                    statusClass = 'bg-green-100 border-green-300';
+                    statusText = '<span class="font-bold text-green-700">Correct (+1.00)</span>';
+                    answerDetails = `<p class="text-gray-700 mt-2">Your answer: <strong>${q.options[userAnswerIndex]}</strong></p>`;
+                } else {
+                    // Incorrect
+                    score -= 0.25;
+                    incorrectCount++;
+                    statusClass = 'bg-red-100 border-red-300';
+                    statusText = '<span class="font-bold text-red-700">Incorrect (-0.25)</span>';
+                    answerDetails = `
+                        <p class="text-gray-700 mt-2">Your answer: <strong class="text-red-700">${q.options[userAnswerIndex]}</strong></p>
+                        <p class="text-gray-700 mt-1">Correct answer: <strong class="text-green-700">${q.options[correctAnswerIndex]}</strong></p>
+                    `;
+                }
+
+                // Build the HTML for the review item
+                resultsHTML += `
+                    <div class="result-item p-4 rounded-lg border ${statusClass} shadow-sm">
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-center">
+                            <p class="font-semibold text-gray-800 mb-2 sm:mb-0">${q.q}</p>
+                            <div class="flex-shrink-0">${statusText}</div>
+                        </div>
+                        ${answerDetails}
+                    </div>
+                `;
+            });
+
+            // Display Score Summary
+            const maxScore = questions.length;
+            const scorePercentage = ((score / maxScore) * 100);
+            const finalPercentage = Math.max(0, scorePercentage).toFixed(1); // Ensure percentage isn't negative
+            
+            scoreSummaryEl.innerHTML = `
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Your Final Score: ${score.toFixed(2)} / ${maxScore}</h2>
+                <p class="text-4xl font-bold ${scorePercentage >= 40 ? 'text-green-600' : 'text-red-600'} mb-3">${finalPercentage}%</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center text-lg mb-4">
+                    <div class="p-2 bg-green-50 rounded-lg">
+                        <div class="font-bold text-green-700">Correct</div>
+                        <div class="text-2xl font-bold text-green-600">${correctCount}</div>
+                    </div>
+                    <div class="p-2 bg-red-50 rounded-lg">
+                        <div class="font-bold text-red-700">Incorrect</div>
+                        <div class="text-2xl font-bold text-red-600">${incorrectCount}</div>
+                    </div>
+                    <div class="p-2 bg-yellow-50 rounded-lg">
+                        <div class="font-bold text-yellow-700">Unanswered</div>
+                        <div class="text-2xl font-bold text-yellow-600">${unansweredCount}</div>
+                    </div>
+                </div>
+                <p class="text-lg text-gray-600">Time Taken: <strong>${formatTimeTaken(3600 - timeTaken)}</strong></p>
+            `;
+
+            // Display Detailed Results
+            resultsDetailsEl.innerHTML = resultsHTML;
+        }
+        
+        /**
+         * Resets the app to the start screen.
+         */
+        function restartTest() {
+            resultsScreen.style.display = 'none';
+            testScreen.style.display = 'none';
+            startScreen.style.display = 'block';
+        }
+
+        // --- 5. Event Listeners ---
+        startBtn.addEventListener('click', startTest);
+        submitBtn.addEventListener('click', submitTest);
+        restartBtn.addEventListener('click', restartTest);
+
+    </script>
+</body>
+</html>
