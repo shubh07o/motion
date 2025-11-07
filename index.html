@@ -75,14 +75,11 @@
             <!-- Scrollable Questions Container -->
             <div id="questions-container" class="space-y-8 max-h-[65vh] overflow-y-auto pr-2">
                 <!-- Questions will be dynamically inserted here by JavaScript -->
+                <!-- The Submit Button will also be dynamically inserted here after the questions -->
             </div>
 
-            <!-- Submit Button -->
-            <div class="mt-8">
-                <button id="submit-btn" class="w-full bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition-all duration-300 text-lg shadow-md">
-                    Submit Test
-                </button>
-            </div>
+            <!-- Submit Button (REMOVED FROM HERE) -->
+            <!-- The button is now added dynamically by renderQuestions() -->
         </div>
 
         <!-- Screen 3: Results Screen (Hidden) -->
@@ -622,7 +619,7 @@
         const resultsScreen = document.getElementById('results-screen');
 
         const startBtn = document.getElementById('start-btn');
-        const submitBtn = document.getElementById('submit-btn');
+        // const submitBtn = document.getElementById('submit-btn'); // REMOVED - will be created dynamically
         const restartBtn = document.getElementById('restart-btn');
 
         const timerEl = document.getElementById('timer');
@@ -704,6 +701,21 @@
                 questionBlock.appendChild(optionsGroup);
                 questionsContainer.appendChild(questionBlock);
             });
+
+            // --- MODIFICATION ---
+            // Add the submit button at the end of the questions list
+            const submitButtonContainer = document.createElement('div');
+            submitButtonContainer.className = 'mt-8'; // Add margin-top
+
+            const submitButton = document.createElement('button');
+            submitButton.id = 'submit-btn'; // Give it an ID
+            submitButton.className = 'w-full bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition-all duration-300 text-lg shadow-md';
+            submitButton.textContent = 'Submit Test';
+            submitButton.addEventListener('click', submitTest); // Add listener here
+
+            submitButtonContainer.appendChild(submitButton);
+            questionsContainer.appendChild(submitButtonContainer);
+            // --- END MODIFICATION ---
         }
 
         /**
@@ -857,7 +869,7 @@
 
         // --- 5. Event Listeners ---
         startBtn.addEventListener('click', startTest);
-        submitBtn.addEventListener('click', submitTest);
+        // submitBtn event listener is now added dynamically in renderQuestions()
         restartBtn.addEventListener('click', restartTest);
 
     </script>
